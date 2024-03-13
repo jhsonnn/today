@@ -1,35 +1,51 @@
+// import MDEditor from '@uiw/react-md-editor';
 
-import { useRef } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
+import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
+import { db } from '../../firebase';
+import useDiaryStore from '../../store/useDiaryStore';
+import { Editor } from '../editor/editor';
+const CreateDiary = () => {
 
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-const CreateDiary = ({ body, setBody }) => {
-  const editorRef = useRef();
+  const { title, content } = useDiaryStore();
+  const navigate = useNavigate();
+  const handleClickEditDiary = async () => {
+    try {
 
-  const onChangeGetHTML = () => {
-    // 에디터에 입력된 내용을 HTML 태그 형태로 취득
-    const data = editorRef.current.getInstance().getHTML();
-    // Body에 담기
-    setBody(data);
-  };
+
+      const docRef = await addDoc(collection(db, 'diary'), {
+        title,
+        content,
+      })
+      console.log('등록완', docRef.id)
+      navigate('/')
+      alert('💕일기가 등록되었습니다💕')
+    } catch (error) {
+      console.error("등록에러", error)
+      console.log(db)
+    }
+  }
+
+
+
   return (
-    <Editor
-      toolbarItems={[
-        // 툴바 옵션 설정
-        ['heading', 'bold', 'italic', 'strike'],
-        ['hr', 'quote'],
-        ['ul', 'ol', 'task', 'indent', 'outdent'],
-        ['table', 'image', 'link'],
-        ['code', 'codeblock']
-      ]}
-      height="500px" // 에디터 창 높이
-      initialEditType="markdown" // 기본 에디터 타입 (or wysiwyg)
-      previewStyle="vertical" // 미리보기 스타일 (or tab) (verttical은 양쪽이 나뉨)
+    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 my-10 ">
+      <div className='w-full bg-todayPink p-6  rounded-t-lg'>
+        <ul className='list-none flex'>
+          <li className='w-3 h-3 bg-todayRed rounded-full mr-3'></li>
+          <li className='w-3 h-3 bg-yellow-500 rounded-full mr-3'></li>
+          <li className='w-3 h-3 bg-todayGreen rounded-full'></li>
+        </ul>
+      </div>
+      <div className='w-full h-auto bg-[#FCF7F7] rounded-b-lg p-10 '>
 
-      ref={editorRef} // ref 참조
-      onChange={onChangeGetHTML} // onChange 이벤트
-    >
-    </Editor>
+        <Editor />
+        <div className='flex justify-end mt-4'>
+          <button className='w-auto h-auto py-2 px-3 bg-todayPink text-white rounded-lg border hover:bg-[#FF5284]' onClick={handleClickEditDiary}>등록하기</button>
+        </div>
+      </div>
+    </div>
   )
 }
 
