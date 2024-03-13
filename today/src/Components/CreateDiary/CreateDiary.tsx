@@ -8,7 +8,7 @@ import useDiaryStore from '../../store/useDiaryStore';
 import { Editor } from '../editor/editor';
 const CreateDiary = () => {
 
-  const { title, content } = useDiaryStore();
+  const { title, content, setTitle, setContent } = useDiaryStore();
   const navigate = useNavigate();
 
   const handleClickEditDiary = async () => {
@@ -24,8 +24,11 @@ const CreateDiary = () => {
         createdAt: new Date()
       })
       console.log('등록완', docRef.id)
+
       navigate('/')
       alert('💕일기가 등록되었습니다💕')
+      setTitle('');
+      setContent('');
     } catch (error) {
       console.error("등록에러", error)
       console.log(db)
