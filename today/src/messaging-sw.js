@@ -32,10 +32,9 @@ export function requestPermission() {
       console.log("푸시 권한 차단");
     }
   });
-
-  onMessage(messaging, (payload) => {
-    console.log("메시지가 도착했습니다.", payload);
-  });
 }
+onMessage(messaging, (payload) => {
+  console.log("Message received. ", payload);
+});
 
 requestPermission();
