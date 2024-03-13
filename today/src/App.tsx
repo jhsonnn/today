@@ -1,9 +1,11 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 import CreateDiary from "./Components/CreateDiary/CreateDiary";
+import Header from "./Components/header/Header";
 
 const Layout = () => {
   return (
     <>
+      <Header />
       <Outlet />
     </>
   )
