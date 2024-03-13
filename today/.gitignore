@@ -22,10 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-<<<<<<< HEAD
 
 fir-push-68c73-082ca5dc03e1.json
 .env
 /cert
-=======
->>>>>>> parent of 8389b0e (⚡️ push기능 firebase env,서비스워커설정,테스트알림성공)
