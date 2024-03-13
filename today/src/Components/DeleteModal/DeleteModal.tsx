@@ -1,12 +1,13 @@
 import useDeleteModalStore from "../../store/deleteModalStore";
 
-const DeleteModal = () => {
-  const { isOpen, closeModal, deleteDiary } = useDeleteModalStore();
+const DeleteModal = ({ diaryId }) => {
+  const { closeModal, deleteDiary } = useDeleteModalStore();
 
   // 확인 버튼 클릭 이벤트 핸들러
   const handleConfirm = async () => {
     // 삭제 기능 호출
-    await deleteDiary(id);
+    await deleteDiary(diaryId);
+
     // 모달 닫기
     closeModal();
   };
@@ -16,6 +17,8 @@ const DeleteModal = () => {
     // 모달 닫기
     closeModal();
   };
+
+
 
   return (
     <div className="bg-gray-900/40 absolute z-50 w-full h-full flex justify-center items-center">

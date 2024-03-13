@@ -16,11 +16,11 @@ const Layout = () => {
 
 function App() {
 
-  const { isOpen } = useDeleteModalStore();
+  const { isOpen, id } = useDeleteModalStore();
   return (
     <>
 
-      {isOpen && <DeleteModal />}
+      {isOpen && id && <DeleteModal diaryId={id} />}
       <Routes>
         <Route path="/" element={<Layout />}>
 

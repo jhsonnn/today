@@ -4,15 +4,17 @@ import { create } from 'zustand';
 import { db } from '../firebase';
 interface DeleteModalState {
   isOpen: boolean;
-  openModal: () => void;
+  id: string | null;
+  openModal: (id: string) => void;
   closeModal: () => void;
   deleteDiary: (id: string) => Promise<void>;
 }
 
 const useDeleteModalStore = create<DeleteModalState>((set) => ({
   isOpen: false,
-  openModal: () => set({ isOpen: true }),
-  closeModal: () => set({ isOpen: false }),
+  id: null, // 추가된 부분
+  openModal: (id) => set({ isOpen: true, id }),
+  closeModal: () => set({ isOpen: false, id: null }),
   deleteDiary: async (id: string) => {
     try {
       // Firestore에서 해당 문서 삭제

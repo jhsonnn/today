@@ -18,7 +18,7 @@ export const DiaryList = () => {
   const { openModal } = useDeleteModalStore();
 
   const handleDeleteClick = (id: string) => {
-    openModal();
+    openModal(id);
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const DiaryList = () => {
     };
 
     fetchDiaries();
-  }, []);
+  }, [diaries]);
 
   const handleDiaryClick = (id: string) => {
     navigate(`/diary/${id}`);
