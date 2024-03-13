@@ -22,9 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-#key files
-/cert
-#firebase
-.env
 
 fir-push-68c73-082ca5dc03e1.json
+.env
+/cert
