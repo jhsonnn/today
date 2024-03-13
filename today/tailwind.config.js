@@ -11,6 +11,7 @@ export default {
         todayOrange: "#FCAA430",
         todayGreen: "#72C18E",
         todayRed: "#F95F5F",
+        todayGray: "#79889B",
       },
     },
   },
