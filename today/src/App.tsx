@@ -1,7 +1,10 @@
 import { Outlet, Route, Routes } from "react-router-dom";
+import DeleteModal from "./Components/DeleteModal/DeleteModal";
 import Header from "./Components/header/Header";
+import { DetailPage } from "./Pages/DetailPage";
 import EditPage from "./Pages/EditPage";
-
+import { MainPage } from "./Pages/MainPage";
+import useDeleteModalStore from "./store/deleteModalStore";
 const Layout = () => {
   return (
     <>
@@ -12,13 +15,22 @@ const Layout = () => {
 }
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/editor" element={<EditPage />} />
 
-      </Route>
-    </Routes>
+  const { isOpen } = useDeleteModalStore();
+  return (
+    <>
+
+      {isOpen && <DeleteModal />}
+      <Routes>
+        <Route path="/" element={<Layout />}>
+
+          <Route index element={<MainPage />} />
+          <Route path="/editor" element={<EditPage />} />
+          <Route path="/diary/:id" element={<DetailPage />} />
+
+        </Route>
+      </Routes>
+    </>
   )
 }
 

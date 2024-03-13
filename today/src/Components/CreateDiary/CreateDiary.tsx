@@ -10,13 +10,18 @@ const CreateDiary = () => {
 
   const { title, content } = useDiaryStore();
   const navigate = useNavigate();
+
   const handleClickEditDiary = async () => {
+
+    if (!title.trim() || !content.trim()) {
+      alert('제목과 내용을 모두 입력해주세요.');
+      return; // 함수를 여기서 종료시켜 더 이상 진행하지 않음
+    }
     try {
-
-
       const docRef = await addDoc(collection(db, 'diary'), {
         title,
         content,
+        createdAt: new Date()
       })
       console.log('등록완', docRef.id)
       navigate('/')
