@@ -11,7 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "@uiw/react-md-editor": "^4.0.4",
+    "@xeger/quill-image-actions": "^0.7.2",
+    "@xeger/quill-image-formats": "^0.7.2",
     "dotenv": "^16.4.5",
+    "marked": "^12.0.1",
     "firebase": "^10.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
