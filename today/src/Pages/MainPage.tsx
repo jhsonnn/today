@@ -1,14 +1,15 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { DiaryList } from "../Components/DiaryList/DiaryList";
+import { EDIT_DIARY } from "../contants/componants";
 export const MainPage = () => {
   const navigate = useNavigate();
 
   const handleClickEdit = () => {
-    navigate('/editor')
+    navigate(EDIT_DIARY)
   }
   return (
-    <div className="w-full relative bg-gray-50">
+    <div className="w-full relative">
 
       <div className="container mx-auto sm:px-6 lg:px-8">
         <div className="w-full h-auto mt-[100px] flex">

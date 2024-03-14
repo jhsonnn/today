@@ -1,8 +1,6 @@
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { ChangeEvent, useCallback, useMemo, useRef } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import "react-quill/dist/quill.snow.css";
-import { storage } from '../../firebase';
 import useDiaryStore from '../../store/useDiaryStore';
 
 import { ImageActions } from "@xeger/quill-image-actions";
@@ -25,32 +23,32 @@ export const Editor = () => {
     setTitle(e.target.value);
   }, [setTitle]);
 
-  const imageHandler = useCallback(() => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-    input.addEventListener("change", async () => {
-      const editor = quillRef.current?.getEditor();
-      if (!editor) return;
+  // const imageHandler = useCallback(() => {
+  //   const input = document.createElement("input");
+  //   input.setAttribute("type", "file");
+  //   input.setAttribute("accept", "image/*");
+  //   input.click();
+  //   input.addEventListener("change", async () => {
+  //     const editor = quillRef.current?.getEditor();
+  //     if (!editor) return;
 
-      const file = input.files?.[0];
-      if (!file) return;
+  //     const file = input.files?.[0];
+  //     if (!file) return;
 
-      const range = editor.getSelection(true);
-      try {
-        const storageRef = ref(storage, `image/${Date.now()}`);
-        await uploadBytes(storageRef, file).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            editor.insertEmbed(range?.index || 0, "image", url);
-            editor.setSelection((range?.index || 0) + 1);
-          });
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  }, []);
+  //     const range = editor.getSelection(true);
+  //     try {
+  //       const storageRef = ref(storage, `image/${Date.now()}`);
+  //       await uploadBytes(storageRef, file).then((snapshot) => {
+  //         getDownloadURL(snapshot.ref).then((url) => {
+  //           editor.insertEmbed(range?.index || 0, "image", url);
+  //           editor.setSelection((range?.index || 0) + 1);
+  //         });
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   });
+  // }, []);
 
   const modules = useMemo<ModulesType>(() => {
     return {
@@ -65,9 +63,10 @@ export const Editor = () => {
           [{ align: [] }, "link", "image"],
           ["clean"],
         ],
+
         ImageResize: {
           parchment: Quill.import('parchment')
-        }
+        },
       },
     }
   }, []);
@@ -78,7 +77,7 @@ export const Editor = () => {
         value={title}
         onChange={handleChangeTitle}
         className='mb-4 border w-full p-2 rounded-lg focus:outline-todayPink' placeholder='제목을 입력하세요' />
-      <div className='bg-white h-96'>
+      <div className='h-[600px] overflow-hidden bg-white'>
         <ReactQuill
           theme="snow"
           ref={quillRef}
@@ -86,7 +85,7 @@ export const Editor = () => {
           formats={['header', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'color', 'background', 'align', 'link', 'image', 'float', 'height', 'width']}
           onChange={setContent}
           modules={modules}
-          style={{ "height": "343px" }}
+          style={{ "height": "556px" }}
         />
       </div>
     </>

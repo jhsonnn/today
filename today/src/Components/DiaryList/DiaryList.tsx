@@ -2,6 +2,7 @@ import { PencilSquareIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { DocumentData, QueryDocumentSnapshot, collection, getDocs, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UPDATE_DIARY } from "../../contants/componants";
 import { db } from "../../firebase";
 import useDeleteModalStore from "../../store/deleteModalStore";
 
@@ -61,6 +62,10 @@ export const DiaryList = () => {
     return date.toLocaleDateString('ko-KR');
   };
 
+  const handleEditClick = (id: string) => {
+    navigate(`${UPDATE_DIARY}/${id}`);
+  };
+
   return (
     <>
       <ul className="w-full grid grid-cols-4 gap-2 cursor-pointer">
@@ -74,7 +79,7 @@ export const DiaryList = () => {
             <p className="text-sm text-gray-400 h-[120px]">{processContent(diary.content)}</p>
             <div className="flex justify-between items-center">
               <p>{formatDate(diary.createdAt)}</p>
-              <button className="rounded-full w-10 h-10 flex justify-center items-center bg-todayNavy"><PencilSquareIcon width={24} className="text-white" /></button>
+              <button className="rounded-full w-10 h-10 flex justify-center items-center bg-todayNavy"><PencilSquareIcon width={24} className="text-white" onClick={() => handleEditClick(diary.id)} /></button>
             </div>
           </li>
         ))}

@@ -50,7 +50,7 @@ const CreateDiary = () => {
 
         <Editor />
         <div className='flex justify-end mt-4'>
-          <button className='w-auto h-auto py-2 px-3 bg-todayPink text-white rounded-lg border hover:bg-[#FF5284]' onClick={handleClickEditDiary}>등록하기</button>
+          <button className="rounded-md bg-todayPink px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#FF5284] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 " onClick={handleClickEditDiary}>등록하기</button>
         </div>
       </div>
     </div>
