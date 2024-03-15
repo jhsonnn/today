@@ -4,6 +4,7 @@ import {
   QueryDocumentSnapshot,
   collection,
   getDocs,
+  orderBy,
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { UPDATE_DIARY } from "../../contants/componants";
 import { db } from "../../firebase";
 import useDeleteModalStore from "../../store/deleteModalStore";
+import Sort from "../Sort/Sort";
 
 interface Diary {
   id: string;
@@ -29,17 +31,32 @@ export const DiaryList = () => {
   };
 
   useEffect(() => {
-    fetchDiaries();
+    SortFetchDiaries();
   }, []);
+  //오래된 순
   const fetchDiaries = async () => {
     const q = query(collection(db, "diary"));
-    const querySnapshot = await getDocs(q);
+    const sortData = await getDocs(query(q, orderBy("createdAt")));
     const diaryList: Diary[] = [];
-    querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+    sortData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
       const diaryData = doc.data() as Diary; // doc.data()를 Diary 타입으로 형변환
       diaryData.createdAt = diaryData.createdAt.toDate();
       diaryList.push({ id: doc.id, ...diaryData });
     });
+
+    setDiaries(diaryList);
+  };
+  // 최신순
+  const SortFetchDiaries = async () => {
+    const q = query(collection(db, "diary"));
+    const sortData = await getDocs(query(q, orderBy("createdAt", "desc")));
+    const diaryList: Diary[] = [];
+    sortData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+      const diaryData = doc.data() as Diary; // doc.data()를 Diary 타입으로 형변환
+      diaryData.createdAt = diaryData.createdAt.toDate();
+      diaryList.push({ id: doc.id, ...diaryData });
+    });
+
     setDiaries(diaryList);
   };
   const handleDiaryClick = (id: string) => {
@@ -74,7 +91,8 @@ export const DiaryList = () => {
 
   return (
     <>
-      <ul className="w-full grid grid-cols-4 gap-2 cursor-pointer">
+      <Sort sortFetchDiaries={SortFetchDiaries} fetchDiaries={fetchDiaries} />
+      <ul className="mt-5 w-full grid grid-cols-4 gap-2 cursor-pointer">
         {diaries.map((diary) => (
           <li
             className="shadow-md w-[240px] rounded-2xl p-5 bg-white"
