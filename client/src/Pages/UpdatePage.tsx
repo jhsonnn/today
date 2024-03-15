@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Editor } from "../Components/editor/editor";
 import { db } from "../firebase";
@@ -8,7 +8,6 @@ import useDiaryStore from "../store/useDiaryStore";
 const UpdatePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [diary, setDiary] = useState(null);
   const { title, content, setTitle, setContent } = useDiaryStore();
 
   useEffect(() => {
@@ -20,7 +19,6 @@ const UpdatePage = () => {
           const diaryData = docSnap.data() as Diary;
           setTitle(diaryData.title);
           setContent(diaryData.content);
-          setDiary(diaryData);
         } else {
           console.log('No such document!');
         }
@@ -39,6 +37,8 @@ const UpdatePage = () => {
         content,
       });
       navigate('/');
+      setTitle('')
+      setContent('')
       alert('💕일기가 수정되었습니다💕');
     } catch (error) {
       console.error("Error updating document:", error);

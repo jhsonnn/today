@@ -1,5 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import Calender from "../Components/Calender/Calender";
 import { DiaryList } from "../Components/DiaryList/DiaryList";
 import { EDIT_DIARY } from "../contants/componants";
 export const MainPage = () => {
@@ -14,7 +15,7 @@ export const MainPage = () => {
       <div className="container mx-auto sm:px-6 lg:px-8">
         <div className="w-full h-auto mt-[100px] flex">
           <div className="w-[600px] h-96 p-5 border-r">
-            <p>여기가 캘린더</p>
+            <Calender />
           </div>
           <div className="w-full h-[850px] p-5 overflow-y-auto">
             <DiaryList />

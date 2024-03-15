@@ -23,20 +23,23 @@ export const DiaryList = () => {
   };
 
   useEffect(() => {
-    const fetchDiaries = async () => {
-      const q = query(collection(db, 'diary'));
-      const querySnapshot = await getDocs(q);
-      const diaryList: Diary[] = [];
-      querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-        const diaryData = doc.data() as Diary; // doc.data()를 Diary 타입으로 형변환
-        diaryData.createdAt = diaryData.createdAt.toDate();
-        diaryList.push({ id: doc.id, ...diaryData });
-      });
-      setDiaries(diaryList);
-    };
+    fetchDiaries()
+  }, [])
 
-    fetchDiaries();
-  }, [diaries]);
+
+  const fetchDiaries = async () => {
+    const q = query(collection(db, 'diary'));
+    const querySnapshot = await getDocs(q);
+    const diaryList: Diary[] = [];
+    querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+      const diaryData = doc.data() as Diary; // doc.data()를 Diary 타입으로 형변환
+      diaryData.createdAt = diaryData.createdAt.toDate();
+      diaryList.push({ id: doc.id, ...diaryData });
+    });
+    setDiaries(diaryList);
+  };
+
+
 
   const handleDiaryClick = (id: string) => {
     navigate(`/diary/${id}`);

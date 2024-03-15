@@ -1,4 +1,5 @@
-// const publicVapidKey =
+const publicVapidKey =
+  "BLXcS3TPLlk4RrEk55kPFbJ6ULHuGJaD5c8qEybxN27dgxTwl9Ij8sm2h-b0Sf4RzOwL7i8AcR_CBv_6lk0TQ84";
 // Check for service worker
 if ("serviceWorker" in navigator) {
   send().catch((err) => console.log(err));

@@ -8,8 +8,9 @@ const app = express();
 app.use(express.static(path.join(__dirname, "client/public")));
 app.use(bodyParser.json());
 //키값 넣기
-// const publicVapidKey =
-// const privateVapidKey =
+const publicVapidKey =
+  "BLXcS3TPLlk4RrEk55kPFbJ6ULHuGJaD5c8qEybxN27dgxTwl9Ij8sm2h-b0Sf4RzOwL7i8AcR_CBv_6lk0TQ84";
+const privateVapidKey = "z1k_omLkfWEtsBTU8kTXql_fFNVjm2Y5o4RiPY1Vjjg";
 webPush.setVapidDetails(
   "mailto:test@test.com",
   publicVapidKey,
