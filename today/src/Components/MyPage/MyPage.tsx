@@ -1,17 +1,64 @@
 import { useEffect, useState } from "react";
+import {
+  addDoc,
+  collection,
+  db,
+  getDocs,
+  query,
+  where,
+} from "../../../firebase";
 
 function MyPage() {
-  const [userName, setUserName] = useState(
-    localStorage.getItem("userName") || ""
-  );
-  const [groupCode, setGroupCode] = useState();
+  const [userName, setUserName] = useState("");
+  const [groupCode, setGroupCode] = useState("");
   const [isJoinBtnDisabled, setIsJoinBtnDisabled] = useState(false);
   const [isGeneratedBtnDisabled, setIsGeneratedBtnDisabled] = useState(false);
+  const [isAlreadyJoined, setIsAlreadyJoined] = useState(false); // 추가된 상태를 추적하는 상태
+
+  enum DB_NAME {
+    "testToday",
+  }
+  // firestore에 저장
+  useEffect(() => {
+    async function checkIfAlreadyJoined() {
+      if (userName) {
+        const q = query(
+          collection(db, DB_NAME),
+          where("userName", "==", userName)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.size > 0) {
+          setIsAlreadyJoined(true);
+          setIsJoinBtnDisabled(true);
+        } else {
+          setIsAlreadyJoined(false);
+          setIsJoinBtnDisabled(false); // 존재하지 않는 경우 버튼 활성화
+        }
+      }
+    }
+    checkIfAlreadyJoined();
+  }, [userName]);
 
   // 이름 입력 함수
   const handleChangeName = (e) => {
     setUserName(e.target.value);
-    //console.log(e.target.value);
+  };
+
+  //참여하기 버튼 클릭 함수
+  const handleClickJoinGroup = async () => {
+    try {
+      // Firestore에 데이터 추가
+      const docRef = await addDoc(collection(db, "testToday"), {
+        userName,
+        groupCode,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      // 상태 및 버튼 상태 업데이트
+      setIsJoinBtnDisabled(true);
+      // 이후 로직 추가
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   //그룹 코드 생성 함수
@@ -20,25 +67,6 @@ function MyPage() {
     setGroupCode(randomGroupCode.toString());
     setIsGeneratedBtnDisabled(true);
   }
-  //참여하기 버튼 클릭 함수
-  const handleClickJoinGroup = () => {
-    localStorage.setItem("userName", userName);
-    localStorage.setItem("groupCode", groupCode);
-    setIsJoinBtnDisabled(true);
-  };
-
-  //   로컬 스토리지에서 이름, 팀 코드 불러오기
-  useEffect(() => {
-    const storedUserName = localStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
-    const storedGroupCode = localStorage.getItem("groupCode");
-    if (storedGroupCode) {
-      setGroupCode(storedGroupCode);
-      setIsJoinBtnDisabled(true);
-    }
-  }, []);
 
   return (
     <div style={{ flexDirection: "row" }}>
