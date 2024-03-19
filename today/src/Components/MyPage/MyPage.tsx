@@ -9,8 +9,16 @@ import {
 } from "../../../firebase";
 
 function MyPage() {
-  const [userName, setUserName] = useState("");
-  const [groupCode, setGroupCode] = useState("");
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName")
+      ? JSON.parse(localStorage.getItem("userName"))
+      : ""
+  );
+  const [groupCode, setGroupCode] = useState(
+    localStorage.getItem("groupCode")
+      ? JSON.parse(localStorage.getItem("groupCode"))
+      : ""
+  );
   const [isJoinBtnDisabled, setIsJoinBtnDisabled] = useState(false);
   const [isGeneratedBtnDisabled, setIsGeneratedBtnDisabled] = useState(false);
   const [isAlreadyJoined, setIsAlreadyJoined] = useState(false); // 추가된 상태를 추적하는 상태
@@ -59,6 +67,10 @@ function MyPage() {
     } catch (error) {
       console.error("Error adding document: ", error);
     }
+
+    //localStorage에 GroupCode, userName 저장
+    localStorage.setItem("userName", JSON.stringify(userName));
+    localStorage.setItem("groupCode", JSON.stringify(groupCode));
   };
 
   //그룹 코드 생성 함수
