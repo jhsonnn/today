@@ -1,7 +1,7 @@
 import { Outlet, Route, Routes } from "react-router-dom";
-import Login from "./Components/Login/Login";
-import MyPage from "./Components/MyPage/MyPage";
 import Header from "./Components/header/Header";
+import Login from "./Pages/Login/Login";
+import MyPage from "./Pages/MyPage/MyPage";
 
 const Layout = () => {
   return (

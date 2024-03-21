@@ -7,45 +7,49 @@ import {
   query,
   where,
 } from "../../../firebase";
+import { useGoogleAuthContext } from "../../context/GoogleAuthContext";
+
+enum DB_NAME {
+  "testToday",
+}
 
 function MyPage() {
-  const [userName, setUserName] = useState(
-    localStorage.getItem("userName")
-      ? JSON.parse(localStorage.getItem("userName"))
-      : ""
-  );
-  const [groupCode, setGroupCode] = useState(
-    localStorage.getItem("groupCode")
-      ? JSON.parse(localStorage.getItem("groupCode"))
-      : ""
-  );
+  const { googleUserData } = useGoogleAuthContext(); // 구글 사용자 데이터를 가져옴
+
+  const [userName, setUserName] = useState(() => {
+    const storedUserName = localStorage.getItem("userName");
+    return storedUserName || ""; // JSON 파싱 제거
+  });
+
+  const [groupCode, setGroupCode] = useState(() => {
+    const storedGroupCode = localStorage.getItem("groupCode");
+    return storedGroupCode ? JSON.parse(storedGroupCode) : ""; // JSON.parse() 함수 적용
+  });
+
   const [isJoinBtnDisabled, setIsJoinBtnDisabled] = useState(false);
   const [isGeneratedBtnDisabled, setIsGeneratedBtnDisabled] = useState(false);
-  const [isAlreadyJoined, setIsAlreadyJoined] = useState(false); // 추가된 상태를 추적하는 상태
+  //const [isAlreadyJoined, setIsAlreadyJoined] = useState(false); // 추가된 상태를 추적하는 상태
 
-  enum DB_NAME {
-    "testToday",
-  }
   // firestore에 저장
   useEffect(() => {
     async function checkIfAlreadyJoined() {
-      if (userName) {
+      if (userName && googleUserData) {
         const q = query(
           collection(db, DB_NAME),
-          where("userName", "==", userName)
+          where("userName", "==", userName),
+          where("googleId", "==", googleUserData.uid)
         );
         const querySnapshot = await getDocs(q);
-        if (querySnapshot.size > 0) {
-          setIsAlreadyJoined(true);
-          setIsJoinBtnDisabled(true);
-        } else {
-          setIsAlreadyJoined(false);
-          setIsJoinBtnDisabled(false); // 존재하지 않는 경우 버튼 활성화
-        }
+        setIsJoinBtnDisabled(querySnapshot.size > 0);
       }
     }
     checkIfAlreadyJoined();
-  }, [userName]);
+  }, [userName, googleUserData]);
+
+  useEffect(() => {
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("groupCode", groupCode);
+  }, [userName, groupCode]);
 
   // 이름 입력 함수
   const handleChangeName = (e) => {
@@ -55,15 +59,21 @@ function MyPage() {
   //참여하기 버튼 클릭 함수
   const handleClickJoinGroup = async () => {
     try {
+      if (!googleUserData) {
+        console.error("Error adding document: googleUserData is undefined");
+
+        return;
+      }
+
       // Firestore에 데이터 추가
       const docRef = await addDoc(collection(db, "testToday"), {
         userName,
         groupCode,
+        googleId: googleUserData?.uid,
       });
       console.log("Document written with ID: ", docRef.id);
       // 상태 및 버튼 상태 업데이트
       setIsJoinBtnDisabled(true);
-      // 이후 로직 추가
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -71,6 +81,7 @@ function MyPage() {
     //localStorage에 GroupCode, userName 저장
     localStorage.setItem("userName", JSON.stringify(userName));
     localStorage.setItem("groupCode", JSON.stringify(groupCode));
+    //localStorage.setItem("googleEmailAddress", JSON.parse(googleId));
   };
 
   //그룹 코드 생성 함수
@@ -79,7 +90,7 @@ function MyPage() {
     setGroupCode(randomGroupCode.toString());
     setIsGeneratedBtnDisabled(true);
   }
-
+  console.log(googleUserData);
   return (
     <div style={{ flexDirection: "row" }}>
       <div>
